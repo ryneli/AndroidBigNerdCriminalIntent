@@ -40,7 +40,7 @@ public class CrimeDetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
         ButterKnife.bind(this, v);
 
-        dateItem.setText(crime.getDate().toString());
+        dateItem.setText(crime.getSimpleDate());
         dateItem.setEnabled(false);
         return v;
     }

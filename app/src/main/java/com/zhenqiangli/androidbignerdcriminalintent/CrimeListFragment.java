@@ -89,7 +89,7 @@ public class CrimeListFragment extends Fragment {
 
     public void bind(Crime crime) {
       title.setText(crime.getTitle());
-      date.setText(crime.getDate().toString());
+      date.setText(crime.getSimpleDate());
       if (crime.isSolved()) {
         solved.setVisibility(View.INVISIBLE);
       } else {

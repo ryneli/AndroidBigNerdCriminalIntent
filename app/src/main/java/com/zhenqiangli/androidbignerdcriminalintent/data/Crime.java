@@ -1,5 +1,6 @@
 package com.zhenqiangli.androidbignerdcriminalintent.data;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -39,8 +40,8 @@ public class Crime {
         return title;
     }
 
-    public Date getDate() {
-        return date;
+    public String getSimpleDate() {
+        return new SimpleDateFormat("MMMM dd, YYYY").format(date);
     }
 
     public boolean isSolved() {
