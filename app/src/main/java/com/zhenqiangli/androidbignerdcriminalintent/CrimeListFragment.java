@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import com.zhenqiangli.androidbignerdcriminalintent.data.Crime;
 import com.zhenqiangli.androidbignerdcriminalintent.data.CrimeRepository;
 import java.util.List;
+import java.util.UUID;
 
 public class CrimeListFragment extends Fragment {
   private static final String TAG = "CrimeListFragment";
@@ -44,7 +45,12 @@ public class CrimeListFragment extends Fragment {
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_CRIME_DETAIL) {
-      Toast.makeText(getActivity(), "return from detail", Toast.LENGTH_SHORT).show();
+      boolean modified = data.getBooleanExtra(CrimeDetailFragment.RESULT_MODIFIED, true);
+      UUID crimeId = (UUID) data.getSerializableExtra(CrimeDetailFragment.RESULT_CRIME_ID);
+      if (modified) {
+        crimeListAdapter.notifyItemChanged(crimeId);
+        Toast.makeText(getActivity(), "return from detail", Toast.LENGTH_SHORT).show();
+      }
     }
   }
 
@@ -61,6 +67,14 @@ public class CrimeListFragment extends Fragment {
 
     public CrimeListAdapter(List<Crime> crimeList) {
       this.crimeList = crimeList;
+    }
+
+    public void notifyItemChanged(UUID crimeId) {
+      for (int i = 0; i < crimeList.size(); i++) {
+        if (crimeList.get(i).getId().equals(crimeId)) {
+          notifyItemChanged(i);
+        }
+      }
     }
 
     @Override
