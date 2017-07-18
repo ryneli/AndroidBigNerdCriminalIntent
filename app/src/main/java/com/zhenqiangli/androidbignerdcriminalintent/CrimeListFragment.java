@@ -1,10 +1,12 @@
 package com.zhenqiangli.androidbignerdcriminalintent;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,30 +21,43 @@ import com.zhenqiangli.androidbignerdcriminalintent.data.CrimeRepository;
 import java.util.List;
 
 public class CrimeListFragment extends Fragment {
-
+  private static final String TAG = "CrimeListFragment";
+  private static final int REQUEST_CRIME_DETAIL = 1;
   private RecyclerView crimeListView;
+  private CrimeListAdapter crimeListAdapter;
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       Bundle savedInstanceState) {
     crimeListView = (RecyclerView) inflater.inflate(R.layout.fragment_crime_list, container, false);
     crimeListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
     updateUi();
     return crimeListView;
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    updateUi();
+  }
 
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == REQUEST_CRIME_DETAIL) {
+      Toast.makeText(getActivity(), "return from detail", Toast.LENGTH_SHORT).show();
+    }
+  }
 
   private void updateUi() {
+    Log.d(TAG, "updateUi: ");
     List<Crime> crimeList = CrimeRepository.getInstance().getCrimeList();
-    crimeListView.setAdapter(new CrimeListAdapter(crimeList));
+    crimeListAdapter = new CrimeListAdapter(crimeList);
+    crimeListView.setAdapter(crimeListAdapter);
   }
 
   private class CrimeListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<Crime> crimeList;
-    private Toast toastCrime;
 
     public CrimeListAdapter(List<Crime> crimeList) {
       this.crimeList = crimeList;
@@ -60,12 +75,9 @@ public class CrimeListFragment extends Fragment {
       holder.itemView.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
-          if (toastCrime != null) {
-            toastCrime.cancel();
-          }
-          toastCrime = Toast.makeText(getActivity(),
-              crimeList.get(position).toString(), Toast.LENGTH_SHORT);
-          toastCrime.show();
+          Intent intent = CrimeDetailActivity.newIntent(getActivity(),
+              crimeList.get(position).getId());
+          startActivityForResult(intent, REQUEST_CRIME_DETAIL);
         }
       });
     }

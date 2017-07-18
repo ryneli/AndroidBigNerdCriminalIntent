@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-
-import com.zhenqiangli.androidbignerdcriminalintent.data.Crime;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnTextChanged;
+import com.zhenqiangli.androidbignerdcriminalintent.data.Crime;
+import com.zhenqiangli.androidbignerdcriminalintent.data.CrimeRepository;
+import com.zhenqiangli.androidbignerdcriminalintent.data.CrimeSource;
+import java.util.UUID;
 
 /**
  * Created by zhenqiangli on 7/15/17.
@@ -23,15 +24,26 @@ import butterknife.OnTextChanged;
 
 public class CrimeDetailFragment extends Fragment {
     private Crime crime;
+    private CrimeSource crimeSource = CrimeRepository.getInstance();
+    private static final String ARGS_CRIME_UUID = "args_crime_uuid";
     @BindView(R.id.item_title)
     EditText titleEditText;
     @BindView(R.id.item_date)
     Button dateItem;
 
+    public static CrimeDetailFragment newInstance(UUID crimeId) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ARGS_CRIME_UUID, crimeId);
+        CrimeDetailFragment fragment = new CrimeDetailFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crime = new Crime();
+        UUID crimeId = (UUID) getActivity().getIntent().getSerializableExtra(CrimeDetailActivity.EXTRA_CRIME_UUID);
+        crime = crimeSource.getCrime(crimeId);
     }
 
     @Nullable
@@ -40,6 +52,7 @@ public class CrimeDetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
         ButterKnife.bind(this, v);
 
+        titleEditText.setHint(crime.getTitle());
         dateItem.setText(crime.getSimpleDate());
         dateItem.setEnabled(false);
         return v;

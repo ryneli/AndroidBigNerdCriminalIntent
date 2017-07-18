@@ -1,24 +1,21 @@
 package com.zhenqiangli.androidbignerdcriminalintent;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.content.Context;
+import android.content.Intent;
+import java.util.UUID;
 
-public class CrimeDetailActivity extends AppCompatActivity {
+public class CrimeDetailActivity extends SingleFragmentActivity {
+    public static final String EXTRA_CRIME_UUID = "crime_uuid";
+    public static Intent newIntent(Context context, UUID crimeId) {
+        Intent intent = new Intent(context, CrimeDetailActivity.class);
+        intent.putExtra(EXTRA_CRIME_UUID, crimeId);
+        return intent;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_crime);
-        FragmentManager fragmentManager = getFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
-
-        if (fragment == null) {
-            fragment = new CrimeDetailFragment();
-            fragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
-                    .commit();
-        }
+    protected Fragment createFragment() {
+        UUID crimeId = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_UUID);
+        return CrimeDetailFragment.newInstance(crimeId);
     }
 }

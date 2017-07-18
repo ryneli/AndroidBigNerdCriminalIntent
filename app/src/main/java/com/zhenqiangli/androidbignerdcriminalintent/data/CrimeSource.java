@@ -11,4 +11,5 @@ public interface CrimeSource {
     public List<Crime> getCrimeList();
     public void updateCrime(UUID id, Crime crime);
     public void addCrime(Crime crime);
+    public Crime getCrime(UUID id);
 }

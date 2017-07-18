@@ -12,6 +12,16 @@ public class CrimeRepository implements CrimeSource {
     private static CrimeRepository crimeRepository = new CrimeRepository();
     private List<Crime> crimeList = new LinkedList<>();
 
+    @Override
+    public Crime getCrime(UUID id) {
+        for (Crime crime : crimeList) {
+            if (crime.getId().equals(id)) {
+                return crime;
+            }
+        }
+        return null;
+    }
+
     private CrimeRepository() {
         for (int i = 0; i < 100; i++) {
             crimeList.add(new Crime("Crime #" + i, (i % 2) == 0, (i % 3) == 0));
