@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import butterknife.BindView;
@@ -34,6 +35,8 @@ public class CrimeDetailFragment extends Fragment {
     EditText titleEditText;
     @BindView(R.id.item_date)
     Button dateItem;
+    @BindView(R.id.item_solved)
+    CheckBox solved;
 
     public static CrimeDetailFragment newInstance(UUID crimeId) {
         Bundle bundle = new Bundle();
@@ -59,6 +62,7 @@ public class CrimeDetailFragment extends Fragment {
         titleEditText.setHint(crime.getTitle());
         dateItem.setText(crime.getSimpleDate());
         dateItem.setEnabled(false);
+        solved.setChecked(crime.isSolved());
         setResult(false);
         return v;
     }
