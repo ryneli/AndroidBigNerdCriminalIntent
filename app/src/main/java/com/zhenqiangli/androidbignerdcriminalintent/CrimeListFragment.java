@@ -40,10 +40,10 @@ public class CrimeListFragment extends Fragment {
   }
 
   private class CrimeListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+
     private List<Crime> crimeList;
     private Toast toastCrime;
-    private static final int ITEM_CRIME = 1;
-    private static final int ITEM_CRIME_PLUS = 2;
+
     public CrimeListAdapter(List<Crime> crimeList) {
       this.crimeList = crimeList;
     }
@@ -51,20 +51,7 @@ public class CrimeListFragment extends Fragment {
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       LayoutInflater inflater = LayoutInflater.from(getActivity());
-      if (viewType == ITEM_CRIME) {
-        return new CrimeViewHolder(inflater, parent);
-      } else {
-        return new CrimePlusViewHolder(inflater, parent);
-      }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-      if (crimeList.get(position).isRequirePolice()) {
-        return ITEM_CRIME_PLUS;
-      } else {
-        return ITEM_CRIME;
-      }
+      return new CrimeViewHolder(inflater, parent);
     }
 
     @Override
@@ -86,21 +73,6 @@ public class CrimeListFragment extends Fragment {
     @Override
     public int getItemCount() {
       return crimeList.size();
-    }
-  }
-
-  class CrimePlusViewHolder extends BaseViewHolder {
-    @BindView(R.id.item_crime_title) TextView title;
-    @BindView(R.id.item_crime_date) TextView date;
-
-    public CrimePlusViewHolder(LayoutInflater inflater, ViewGroup parent) {
-      super(inflater.inflate(R.layout.item_crime_plus, parent, false));
-      ButterKnife.bind(this, this.itemView);
-    }
-
-    public void bind(Crime crime) {
-      title.setText(crime.getTitle());
-      date.setText(crime.getDate().toString());
     }
   }
 
