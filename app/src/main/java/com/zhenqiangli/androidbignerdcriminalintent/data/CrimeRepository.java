@@ -1,6 +1,5 @@
 package com.zhenqiangli.androidbignerdcriminalintent.data;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +14,7 @@ public class CrimeRepository implements CrimeSource {
 
     private CrimeRepository() {
         for (int i = 0; i < 100; i++) {
-            crimeList.add(new Crime("Crime #" + i, (i % 2) == 0));
+            crimeList.add(new Crime("Crime #" + i, (i % 2) == 0, (i % 3) == 0));
         }
     }
     public static CrimeRepository getInstance() {

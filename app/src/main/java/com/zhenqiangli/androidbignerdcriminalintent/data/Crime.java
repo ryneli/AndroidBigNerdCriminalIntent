@@ -13,6 +13,16 @@ public class Crime {
     private Date date;
     private boolean solved;
 
+    public boolean isRequirePolice() {
+        return requirePolice;
+    }
+
+    public void setRequirePolice(boolean requirePolice) {
+        this.requirePolice = requirePolice;
+    }
+
+    private boolean requirePolice;
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -38,12 +48,17 @@ public class Crime {
     }
 
     public Crime() {
-        this("", false);
+        this("", false, false);
     }
 
     public Crime(String title, boolean solved) {
+        this(title, solved, false);
+    }
+
+    public Crime(String title, boolean solved, boolean requirePolice) {
         this.title = title;
         this.solved = solved;
+        this.requirePolice = requirePolice;
         id = UUID.randomUUID();
         date = new Date();
     }

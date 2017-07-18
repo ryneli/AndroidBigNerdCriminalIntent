@@ -38,21 +38,36 @@ public class CrimeListFragment extends Fragment {
     crimeListView.setAdapter(new CrimeListAdapter(crimeList));
   }
 
-  private class CrimeListAdapter extends RecyclerView.Adapter<CrimeViewHolder> {
+  private class CrimeListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<Crime> crimeList;
     private Toast toastCrime;
+    private static final int ITEM_CRIME = 1;
+    private static final int ITEM_CRIME_PLUS = 2;
     public CrimeListAdapter(List<Crime> crimeList) {
       this.crimeList = crimeList;
     }
 
     @Override
-    public CrimeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       LayoutInflater inflater = LayoutInflater.from(getActivity());
-      return new CrimeViewHolder(inflater, parent);
+      if (viewType == ITEM_CRIME) {
+        return new CrimeViewHolder(inflater, parent);
+      } else {
+        return new CrimePlusViewHolder(inflater, parent);
+      }
     }
 
     @Override
-    public void onBindViewHolder(CrimeViewHolder holder, final int position) {
+    public int getItemViewType(int position) {
+      if (crimeList.get(position).isRequirePolice()) {
+        return ITEM_CRIME_PLUS;
+      } else {
+        return ITEM_CRIME;
+      }
+    }
+
+    @Override
+    public void onBindViewHolder(BaseViewHolder holder, final int position) {
       holder.bind(crimeList.get(position));
       holder.itemView.setOnClickListener(new OnClickListener() {
         @Override
@@ -73,7 +88,22 @@ public class CrimeListFragment extends Fragment {
     }
   }
 
-  class CrimeViewHolder extends RecyclerView.ViewHolder {
+  class CrimePlusViewHolder extends BaseViewHolder {
+    @BindView(R.id.item_crime_title) TextView title;
+    @BindView(R.id.item_crime_date) TextView date;
+
+    public CrimePlusViewHolder(LayoutInflater inflater, ViewGroup parent) {
+      super(inflater.inflate(R.layout.item_crime_plus, parent, false));
+      ButterKnife.bind(this, this.itemView);
+    }
+
+    public void bind(Crime crime) {
+      title.setText(crime.getTitle());
+      date.setText(crime.getDate().toString());
+    }
+  }
+
+  class CrimeViewHolder extends BaseViewHolder {
     @BindView(R.id.item_crime_title) TextView title;
     @BindView(R.id.item_crime_date) TextView date;
 
@@ -86,5 +116,13 @@ public class CrimeListFragment extends Fragment {
       title.setText(crime.getTitle());
       date.setText(crime.getDate().toString());
     }
+  }
+
+  abstract class BaseViewHolder extends RecyclerView.ViewHolder {
+    public BaseViewHolder(View v) {
+      super(v);
+    }
+
+    abstract void bind(Crime crime);
   }
 }
