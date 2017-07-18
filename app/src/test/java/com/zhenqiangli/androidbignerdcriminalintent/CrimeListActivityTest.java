@@ -9,7 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLog;
 
 /**
  * Created by zhenqiangli on 7/18/17.
@@ -18,14 +20,18 @@ import org.robolectric.annotation.Config;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class CrimeListActivityTest {
+  static {
+    System.setProperty("robolectric.logging","stdout");
+    ShadowLog.stream = System.out; // show logger’s output
+  }
   private CrimeListActivity activity;
+  private ActivityController<CrimeListActivity> activityController;
 
   @Before
   public void setUp() throws Exception {
-    activity = Robolectric.buildActivity(CrimeListActivity.class)
-        .create()
-        .resume()
-        .get();
+    activityController = Robolectric.buildActivity(CrimeListActivity.class);
+    activity = activityController.get();
+    activityController.setup();
   }
 
   @Test
@@ -38,10 +44,5 @@ public class CrimeListActivityTest {
     Fragment f = activity.getFragmentManager().findFragmentById(R.id.fragment_container);
     assertNotNull(f);
     assertEquals(f.getClass().getCanonicalName(), CrimeListFragment.class.getCanonicalName());
-  }
-
-  @Test
-  public void exampleTest() {
-    assertEquals(1, 1);
   }
 }
