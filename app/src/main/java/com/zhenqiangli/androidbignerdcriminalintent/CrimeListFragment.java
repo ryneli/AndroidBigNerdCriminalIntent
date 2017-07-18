@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -106,6 +107,8 @@ public class CrimeListFragment extends Fragment {
   class CrimeViewHolder extends BaseViewHolder {
     @BindView(R.id.item_crime_title) TextView title;
     @BindView(R.id.item_crime_date) TextView date;
+    @BindView(R.id.item_crime_solved)
+    ImageView solved;
 
     public CrimeViewHolder(LayoutInflater inflater, ViewGroup parent) {
       super(inflater.inflate(R.layout.item_crime, parent, false));
@@ -115,6 +118,11 @@ public class CrimeListFragment extends Fragment {
     public void bind(Crime crime) {
       title.setText(crime.getTitle());
       date.setText(crime.getDate().toString());
+      if (crime.isSolved()) {
+        solved.setVisibility(View.INVISIBLE);
+      } else {
+        solved.setVisibility(View.VISIBLE);
+      }
     }
   }
 
