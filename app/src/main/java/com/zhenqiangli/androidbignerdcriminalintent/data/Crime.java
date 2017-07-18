@@ -38,6 +38,12 @@ public class Crime {
     }
 
     public Crime() {
+        this("", false);
+    }
+
+    public Crime(String title, boolean solved) {
+        this.title = title;
+        this.solved = solved;
         id = UUID.randomUUID();
         date = new Date();
     }
