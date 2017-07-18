@@ -7,8 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.zhenqiangli.androidbignerdcriminalintent.data.Crime;
@@ -38,6 +40,7 @@ public class CrimeListFragment extends Fragment {
 
   private class CrimeListAdapter extends RecyclerView.Adapter<CrimeViewHolder> {
     private List<Crime> crimeList;
+    private Toast toastCrime;
     public CrimeListAdapter(List<Crime> crimeList) {
       this.crimeList = crimeList;
     }
@@ -49,8 +52,19 @@ public class CrimeListFragment extends Fragment {
     }
 
     @Override
-    public void onBindViewHolder(CrimeViewHolder holder, int position) {
+    public void onBindViewHolder(CrimeViewHolder holder, final int position) {
       holder.bind(crimeList.get(position));
+      holder.itemView.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          if (toastCrime != null) {
+            toastCrime.cancel();
+          }
+          toastCrime = Toast.makeText(getActivity(),
+              crimeList.get(position).toString(), Toast.LENGTH_SHORT);
+          toastCrime.show();
+        }
+      });
     }
 
     @Override
@@ -59,7 +73,7 @@ public class CrimeListFragment extends Fragment {
     }
   }
 
-  static class CrimeViewHolder extends RecyclerView.ViewHolder {
+  class CrimeViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.item_crime_title) TextView title;
     @BindView(R.id.item_crime_date) TextView date;
 
