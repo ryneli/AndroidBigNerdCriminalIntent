@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -31,6 +33,7 @@ public class CrimeDetailFragment extends Fragment {
     private Crime crime;
     private CrimeSource crimeSource = CrimeRepository.getInstance();
     private static final String ARGS_CRIME_UUID = "args_crime_uuid";
+    private static final String DIALOG_DATE = "DialogDate";
     public static final String RESULT_MODIFIED = "result_modified";
     public static final String RESULT_CRIME_ID = "result_crime_id";
     @BindView(R.id.item_title)
@@ -65,7 +68,15 @@ public class CrimeDetailFragment extends Fragment {
 
         titleEditText.setHint(crime.getTitle());
         dateItem.setText(crime.getSimpleDate());
-        dateItem.setEnabled(false);
+        dateItem.setEnabled(true);
+        dateItem.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                DatePickerFragment dialog = new DatePickerFragment();
+                dialog.show(fm, DIALOG_DATE);
+            }
+        });
         solved.setChecked(crime.isSolved());
         setResult(false);
         return v;
