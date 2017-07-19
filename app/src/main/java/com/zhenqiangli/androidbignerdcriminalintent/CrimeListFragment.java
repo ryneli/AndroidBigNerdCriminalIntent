@@ -1,6 +1,6 @@
 package com.zhenqiangli.androidbignerdcriminalintent;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,7 +49,6 @@ public class CrimeListFragment extends Fragment {
       UUID crimeId = (UUID) data.getSerializableExtra(CrimeDetailFragment.RESULT_CRIME_ID);
       if (modified) {
         crimeListAdapter.notifyItemChanged(crimeId);
-        Toast.makeText(getActivity(), "return from detail", Toast.LENGTH_SHORT).show();
       }
     }
   }
@@ -89,7 +88,7 @@ public class CrimeListFragment extends Fragment {
       holder.itemView.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
-          Intent intent = CrimeDetailActivity.newIntent(getActivity(),
+          Intent intent = CrimeDetailPagerActivity.newIntent(getActivity(),
               crimeList.get(position).getId());
           startActivityForResult(intent, REQUEST_CRIME_DETAIL);
         }

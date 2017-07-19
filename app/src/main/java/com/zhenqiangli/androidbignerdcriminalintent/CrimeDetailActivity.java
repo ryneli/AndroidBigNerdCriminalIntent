@@ -1,6 +1,6 @@
 package com.zhenqiangli.androidbignerdcriminalintent;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import java.util.UUID;

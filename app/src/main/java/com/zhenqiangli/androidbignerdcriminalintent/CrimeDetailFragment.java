@@ -1,10 +1,11 @@
 package com.zhenqiangli.androidbignerdcriminalintent;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import java.util.UUID;
  */
 
 public class CrimeDetailFragment extends Fragment {
+    private static final String TAG = "CrimeDetailFragment";
     private Crime crime;
     private CrimeSource crimeSource = CrimeRepository.getInstance();
     private static final String ARGS_CRIME_UUID = "args_crime_uuid";
@@ -39,6 +41,7 @@ public class CrimeDetailFragment extends Fragment {
     CheckBox solved;
 
     public static CrimeDetailFragment newInstance(UUID crimeId) {
+        Log.d(TAG, "newInstance: " + crimeId);
         Bundle bundle = new Bundle();
         bundle.putSerializable(ARGS_CRIME_UUID, crimeId);
         CrimeDetailFragment fragment = new CrimeDetailFragment();
@@ -49,7 +52,8 @@ public class CrimeDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UUID crimeId = (UUID) getActivity().getIntent().getSerializableExtra(CrimeDetailActivity.EXTRA_CRIME_UUID);
+        UUID crimeId = (UUID) getArguments().getSerializable(ARGS_CRIME_UUID);
+        Log.d(TAG, "onCreate: " + crimeId);
         crime = crimeSource.getCrime(crimeId);
     }
 
