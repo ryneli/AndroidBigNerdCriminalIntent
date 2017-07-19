@@ -1,5 +1,6 @@
 package com.zhenqiangli.androidbignerdcriminalintent.data;
 
+import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import java.util.UUID;
  */
 
 public class Crime {
+    private static final String TAG = "Crime";
     private UUID id;
     private String title;
     private Date date;
@@ -25,6 +27,10 @@ public class Crime {
     private boolean requirePolice;
 
     public void setTitle(String title) {
+        if (title == null || title.equals("")) {
+            Log.d(TAG, "setTitle: " + title);
+            return;
+        }
         this.title = title;
     }
 
