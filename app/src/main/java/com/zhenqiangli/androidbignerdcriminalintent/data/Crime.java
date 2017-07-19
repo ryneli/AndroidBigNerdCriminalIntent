@@ -50,6 +50,14 @@ public class Crime {
         return new SimpleDateFormat("MMMM dd, YYYY").format(date);
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public boolean isSolved() {
         return solved;
     }

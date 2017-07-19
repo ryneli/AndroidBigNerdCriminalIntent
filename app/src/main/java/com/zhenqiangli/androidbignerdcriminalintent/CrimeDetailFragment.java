@@ -22,6 +22,7 @@ import butterknife.OnTextChanged;
 import com.zhenqiangli.androidbignerdcriminalintent.data.Crime;
 import com.zhenqiangli.androidbignerdcriminalintent.data.CrimeRepository;
 import com.zhenqiangli.androidbignerdcriminalintent.data.CrimeSource;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -36,6 +37,7 @@ public class CrimeDetailFragment extends Fragment {
     private static final String DIALOG_DATE = "DialogDate";
     public static final String RESULT_MODIFIED = "result_modified";
     public static final String RESULT_CRIME_ID = "result_crime_id";
+    private static final int REQUEST_DATE = 0x1;
     @BindView(R.id.item_title)
     EditText titleEditText;
     @BindView(R.id.item_date)
@@ -53,6 +55,23 @@ public class CrimeDetailFragment extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == REQUEST_DATE) {
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            crime.setDate(date);
+            updateDate();
+        }
+    }
+
+    private void updateDate() {
+        dateItem.setText(crime.getSimpleDate());
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(ARGS_CRIME_UUID);
@@ -67,13 +86,14 @@ public class CrimeDetailFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         titleEditText.setHint(crime.getTitle());
-        dateItem.setText(crime.getSimpleDate());
+        updateDate();
         dateItem.setEnabled(true);
         dateItem.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
-                DatePickerFragment dialog = new DatePickerFragment();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(crime.getDate());
+                dialog.setTargetFragment(CrimeDetailFragment.this, REQUEST_DATE);
                 dialog.show(fm, DIALOG_DATE);
             }
         });
