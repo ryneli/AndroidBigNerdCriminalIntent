@@ -1,19 +1,21 @@
 package com.zhenqiangli.androidbignerdcriminalintent;
 
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.zhenqiangli.androidbignerdcriminalintent.data.Crime;
@@ -26,6 +28,13 @@ public class CrimeListFragment extends Fragment {
   private static final int REQUEST_CRIME_DETAIL = 1;
   private RecyclerView crimeListView;
   private CrimeListAdapter crimeListAdapter;
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -40,6 +49,27 @@ public class CrimeListFragment extends Fragment {
   public void onResume() {
     super.onResume();
     updateUi();
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.fragment_crime_list, menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.new_crime:
+        Crime crime = new Crime();
+        CrimeRepository.getInstance().addCrime(crime);
+        Intent intent = CrimeDetailPagerActivity
+            .newIntent(getActivity(), crime.getId());
+        startActivity(intent);
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   @Override
