@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,9 +26,13 @@ import java.util.UUID;
 
 public class CrimeListFragment extends Fragment {
   private static final String TAG = "CrimeListFragment";
+  private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
   private static final int REQUEST_CRIME_DETAIL = 1;
   private RecyclerView crimeListView;
+  private View noCrimeView;
   private CrimeListAdapter crimeListAdapter;
+  private boolean subtitleShown = false;
+  List<Crime> crimeList;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,8 +46,29 @@ public class CrimeListFragment extends Fragment {
       Bundle savedInstanceState) {
     crimeListView = (RecyclerView) inflater.inflate(R.layout.fragment_crime_list, container, false);
     crimeListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    if (savedInstanceState != null) {
+      subtitleShown = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
+    }
+    noCrimeView = inflater.inflate(R.layout.fragment_no_crime, container, false);
+    crimeList = CrimeRepository.getInstance().getCrimeList();
     updateUi();
-    return crimeListView;
+
+
+    if (crimeList.size() == 0) {
+      return noCrimeView;
+    } else {
+      return crimeListView;
+    }
+  }
+
+  private void showCrimeList() {
+    crimeListView.setVisibility(View.VISIBLE);
+    noCrimeView.setVisibility(View.INVISIBLE);
+  }
+
+  private void showNoCrime() {
+    crimeListView.setVisibility(View.INVISIBLE);
+    noCrimeView.setVisibility(View.VISIBLE);
   }
 
   @Override
@@ -67,8 +93,37 @@ public class CrimeListFragment extends Fragment {
             .newIntent(getActivity(), crime.getId());
         startActivity(intent);
         return true;
+      case R.id.show_subtitle:
+        if (item.getTitle().equals(getString(R.string.show_subtitle))) {
+          item.setTitle(getString(R.string.hide_subtitle));
+          subtitleShown = true;
+        } else if (item.getTitle().equals(getString(R.string.hide_subtitle))) {
+          item.setTitle(getString(R.string.show_subtitle));
+          subtitleShown = false;
+        }
+        updateSubtitle();
+        return true;
       default:
         return super.onOptionsItemSelected(item);
+    }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putBoolean(SAVED_SUBTITLE_VISIBLE, subtitleShown);
+  }
+
+  private void updateSubtitle() {
+    AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+    if (subtitleShown) {
+      int crimeCount = CrimeRepository.getInstance().getCrimeList().size();
+      String subtitle = getResources().getQuantityString(R.plurals.subtitle_format,
+          crimeCount, crimeCount);
+      activity.getSupportActionBar().setSubtitle(subtitle);
+    } else {
+      activity.getSupportActionBar().setSubtitle(null);
     }
   }
 
@@ -84,10 +139,19 @@ public class CrimeListFragment extends Fragment {
   }
 
   private void updateUi() {
-    Log.d(TAG, "updateUi: ");
-    List<Crime> crimeList = CrimeRepository.getInstance().getCrimeList();
+    crimeList = CrimeRepository.getInstance().getCrimeList();
+    Log.d(TAG, "updateUi: " + crimeList.size());
+    if (crimeList.size() == 0) {
+      showNoCrime();
+      return;
+    } else {
+      showCrimeList();
+      // not return
+    }
     crimeListAdapter = new CrimeListAdapter(crimeList);
     crimeListView.setAdapter(crimeListAdapter);
+
+    updateSubtitle();
   }
 
   private class CrimeListAdapter extends RecyclerView.Adapter<BaseViewHolder> {

@@ -4,4 +4,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="date_picker_title">Date of Crime:</string>
     <string name="new_crime">New Crime</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <plurals name="subtitle_format">
+        <item quantity="zero">%1$d crime</item>
+        <item quantity="one">%1$d crime</item>
+        <item quantity="other">%1$d crimes</item>
+    </plurals>
+    <string name="title_no_crime">There is no crime!</string>
 </resources>
